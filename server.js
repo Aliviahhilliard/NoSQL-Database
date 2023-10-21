@@ -1,4 +1,5 @@
 const express = require('express');
+const routes = require('./routes'); 
 const mongoose = require('mongoose');
 
 const app = express();
@@ -6,17 +7,19 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(routes); 
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/social-network', {
-  useFindAndModify: false,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true
+const userRoutes = require('./userRoutes');
+const thoughtRoutes = require('./thoughtRoutes');
+
+app.use('/api', userRoutes);
+app.use('/api', thoughtRoutes);
+
+mongoose.connect('mongodb://localhost/social-network', {
 });
 
-// Add your routes here
-app.use('/api', routes);
+// app.use('/api', routes);
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`API server is running on ${PORT}`);
 });

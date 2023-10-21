@@ -1,0 +1,18 @@
+{
+    "name": "nosql-social-network",
+    "version": "1.0.0",
+    "description": "A NoSQL Social Network API project",
+    "main": "server.js",
+    "type": "commonjs",
+    "scripts": {
+        "start": "node server.js",
+        "seed": "node seeds.js"
+    },
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.17.1",
+        "mongo": "^0.1.0",
+        "mongoose": "^6.2.2"
+    }
+}
