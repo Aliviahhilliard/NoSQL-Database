@@ -1,49 +1,55 @@
+// Import necessary modules
 const mongoose = require('mongoose');
-const { User, Thought } = require('./models'); // Import your models here
+const { User, Thought } = require('../models');
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/social-network', {
-  useFindAndModify: false,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true
-});
+/**
+ * seedDatabase - Seeds the database with User, Thought data
+ */
+async function seedDatabase() {
+  // Connect to the MongoDB database
+  await mongoose.connect('mongodb://localhost/social_network_db', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  console.log('Database connected');
 
-const db = mongoose.connection;
+  // Clear existing data
+  await User.deleteMany({});
+  await Thought.deleteMany({});
 
-const seedData = async () => {
-  try {
-    await db.dropDatabase(); // Clear the existing database
+  // Seed Users
+  const users = [];
+  for (let i = 0; i < 10; i++) {
+    const username = `User_${i}`;
+    const email = `user${i}@example.com`;
 
-    // Seed users
-    const users = await User.create([
-      {
-        username: 'user1',
-        email: 'user1@example.com'
-      },
-      {
-        username: 'user2',
-        email: 'user2@example.com'
-      }
-    ]);
-
-    // Seed thoughts
-    await Thought.create([
-      {
-        thoughtText: 'Thought 1',
-        username: users[0].username
-      },
-      {
-        thoughtText: 'Thought 2',
-        username: users[1].username
-      }
-    ]);
-
-    console.log('Seed data inserted successfully!');
-    process.exit(0);
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
+    const user = await User.create({ username, email });
+    users.push(user._id);
   }
-};
 
-seedData();
+  // Seed Thoughts
+  const thoughts = [];
+  for (const userId of users) {
+    const thoughtData = {
+      thoughtText: 'This is a sample thought',
+      username: `User_${users.indexOf(userId)}`,
+      userId,
+    };
+    
+    const thought = await Thought.create(thoughtData);
+    thoughts.push(thought);
+
+    // Update User's thoughts array
+    const user = await User.findById(userId);
+    user.thoughts.push(thought._id);
+    await user.save();
+  }
+
+  // Log the seeded data
+  console.info('Seeding complete');
+  mongoose.connection.close();
+  process.exit(0);
+}
+
+// Execute the function
+seedDatabase();

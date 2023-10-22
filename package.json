@@ -2,11 +2,10 @@
     "name": "nosql-social-network",
     "version": "1.0.0",
     "description": "A NoSQL Social Network API project",
-    "main": "server.js",
+    "main": "index.js",
     "type": "commonjs",
     "scripts": {
-        "start": "node server.js",
-        "seed": "node seeds.js"
+        "start": "npm start"
     },
     "author": "",
     "license": "MIT",

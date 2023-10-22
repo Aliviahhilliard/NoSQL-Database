@@ -2,7 +2,7 @@ const router = require('express').Router();
 const {
     createReaction,
     deleteReaction,
-} = require('../../controllers/reaction-controller');
+} = require('controllers/reactionsController.js');
 
 router.route('/').post(createReaction);
 

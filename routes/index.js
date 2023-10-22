@@ -1,13 +1,10 @@
 // routes/api/index.js
 
-import express from 'express';
-import thoughtsRoutes from './api/thoughts-routes'; // Import your thoughts routes here
-import usersRoutes from './api/users-routes'; // Import your users routes here
+const router = require('express').Router();
+const apiRoutes = require('./api');
 
-const router = express.Router();
+router.use('/api', apiRoutes);
 
-// Use your thoughts and users routes here
-router.use('/thoughts', thoughtsRoutes);
-router.use('/users', usersRoutes);
+router.use((req, res) => res.send('Wrong route!'));
 
-export default router;
+module.exports = router;
